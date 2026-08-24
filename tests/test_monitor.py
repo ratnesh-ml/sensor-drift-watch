@@ -1,6 +1,6 @@
 import numpy as np
 
-from monitor import detect_anomalies, generate_stream, population_stability_index, summarize
+from sensor_drift_watch.monitor import detailed_summary, detect_anomalies, generate_stream, population_stability_index, psi_severity, summarize
 
 
 def test_stream_is_reproducible():
@@ -22,3 +22,15 @@ def test_summary_has_both_monitoring_signals():
     metrics = summarize(seed=5)
     assert metrics["point_anomalies"] >= 1
     assert metrics["psi_after_shift"] > 0
+
+
+def test_detailed_summary_adds_actionable_context():
+    metrics = detailed_summary(seed=5)
+    assert 0 <= metrics["anomaly_rate"] <= 1
+    assert metrics["psi_severity"] == psi_severity(metrics["psi_after_shift"])
+
+
+def test_psi_severity_bands_are_ordered():
+    assert psi_severity(.05) == "stable"
+    assert psi_severity(.15) == "watch"
+    assert psi_severity(.30) == "investigate"

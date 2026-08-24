@@ -53,3 +53,20 @@ def summarize(seed: int = 42) -> dict[str, float]:
         "known_spikes": float(frame["spike"].sum()),
         "psi_after_shift": population_stability_index(frame["reading"][:split], frame["reading"][split:]),
     }
+
+
+def psi_severity(psi: float) -> str:
+    """Map PSI to an interpretable monitoring action band."""
+    if psi < .10:
+        return "stable"
+    if psi < .25:
+        return "watch"
+    return "investigate"
+
+
+def detailed_summary(seed: int = 42) -> dict[str, object]:
+    """Return operational context alongside the numeric monitoring signals."""
+    metrics = summarize(seed=seed)
+    metrics["anomaly_rate"] = metrics["point_anomalies"] / metrics["rows"] if metrics["rows"] else 0.0
+    metrics["psi_severity"] = psi_severity(metrics["psi_after_shift"])
+    return metrics
