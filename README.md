@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/ratnesh-ml/sensor-drift-watch/actions/workflows/test.yml/badge.svg)](https://github.com/ratnesh-ml/sensor-drift-watch/actions/workflows/test.yml)
 
-> **Portfolio demo:** [Open the Ratnesh ML Lab showcase](https://ratnesh-ml-brwn1i9o5-ratnezhsingh-6317.vercel.app)
+> **Portfolio demo:** [Open the Ratnesh ML Lab showcase](https://ratnesh-ml-lab.vercel.app)
 Models can fail in two different ways: one reading can be strange, or the whole input distribution can move. This project keeps those signals separate.
 
 The repository creates a sensor-like stream with seasonality, isolated spikes, and a later mean shift. It detects local point anomalies with a rolling robust score and estimates distribution movement with a small Population Stability Index implementation.
