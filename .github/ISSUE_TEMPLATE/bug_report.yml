@@ -1,0 +1,24 @@
+name: Drift-monitoring bug
+description: Report a reproducible anomaly, PSI band, action threshold, metric, data-contract, or documentation issue.
+title: "bug: "
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed monitoring behavior
+      description: Include the command, safe sequence shape, and classification or action band you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Scope check
+      options:
+        - label: I did not include production telemetry, sensitive data, or automatic decision claims.
+          required: true
