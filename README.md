@@ -2,10 +2,16 @@
 
 [![CI](https://github.com/ratnesh-ml/sensor-drift-watch/actions/workflows/test.yml/badge.svg)](https://github.com/ratnesh-ml/sensor-drift-watch/actions/workflows/test.yml)
 
-> **Portfolio demo:** [Open the Ratnesh ML Lab showcase](https://ratnesh-ml-lab.vercel.app)
-Models can fail in two different ways: one reading can be strange, or the whole input distribution can move. This project keeps those signals separate.
+I made this monitoring lab to separate two signals that are often mixed together: one odd observation and a population that has genuinely moved. That distinction matters because the response should be different. A single spike may deserve an inspection; a distribution shift may mean the upstream data or model assumptions need to be revisited.
 
-The repository creates a sensor-like stream with seasonality, isolated spikes, and a later mean shift. It detects local point anomalies with a rolling robust score and estimates distribution movement with a small Population Stability Index implementation.
+The repository creates a sensor-like stream with seasonality, isolated spikes, and a later mean shift. It pairs a rolling robust score for point anomalies with a small Population Stability Index (PSI) implementation for distribution drift.
+
+## At a glance
+
+| Signal | The question I am asking | Example response |
+| --- | --- | --- |
+| Point anomaly | Is this observation inconsistent with its local neighbourhood? | Inspect the event or sensor. |
+| Distribution drift | Has the population of readings shifted over time? | Re-check the data pipeline and model validity. |
 
 ## Run it
 
@@ -17,27 +23,16 @@ python -m sensor_drift_watch
 pytest -q
 ```
 
-## Monitoring contract
+## What I was trying to learn
 
-| Signal | Question | Typical response |
-| --- | --- | --- |
-| Point anomaly | Is one observation inconsistent with its local neighbourhood? | Inspect the event or sensor |
-| Distribution drift | Has the population of readings moved? | Re-check data pipeline and model validity |
+Training a model is only one part of its lifecycle. I wanted a small, auditable project that showed I understand the difference between occasionally noisy inputs and systematically changing inputs. The `detailed_summary` helper turns raw values into an anomaly rate and an interpretable PSI band: `stable`, `watch`, or `investigate`.
 
-## Why it belongs in an AI/ML portfolio
+## Limits and next steps
 
-Training a model is only one part of the lifecycle. This project is a compact way to demonstrate that I understand the difference between model inputs that are occasionally noisy and inputs that have changed systematically.
+The stream is synthetic, PSI thresholds are context-dependent, and the rolling detector needs careful edge handling. This is not a production alerting service.
 
-## Limitations
+To move toward one, I would log alert reasons, compare against a seasonal reference, add a small dashboard, and test alerts against labelled incidents rather than only simulated shifts.
 
-The stream is synthetic, PSI thresholds are not universal, and the rolling detector needs careful edge handling. A production version would log alert reasons, compare against a seasonal reference, add dashboards, and test alerts against labelled incidents.
+## Verification and license
 
-
-## Recent depth improvements
-
-The monitoring module now provides `detailed_summary` with anomaly rate and an interpretable PSI severity band: `stable`, `watch`, or `investigate`. This keeps numeric drift signals connected to an operational next action. GitHub Actions runs the monitoring tests continuously.
-
-
-## License
-
-MIT. See [LICENSE](LICENSE).
+Run `pytest -q` locally; GitHub Actions runs the monitoring tests on pushes and pull requests. MIT licensed; see [LICENSE](LICENSE).
